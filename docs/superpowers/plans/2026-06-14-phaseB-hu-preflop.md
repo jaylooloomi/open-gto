@@ -21,6 +21,28 @@ already-trusted generic `CFRSolver` on a tiny tree.
 
 ---
 
+## Decisions locked (2026-06-14, user-confirmed)
+
+- **Multi-action tree + UI machinery is built now** (game-tree navigation,
+  per-action fixed coloring, multi-action freq bar). This is reusable for 6Max
+  and postflop later.
+- **Solving uses a SINGLE open size** (no 2x-vs-3x choice). Rationale: choosing
+  between raise *sizes* is fundamentally postflop-driven; without postflop EV the
+  solver can't pick sizes meaningfully (it degenerates to "max size with value").
+  True multi-size selection is **deferred until after Phase D (postflop)**, when
+  it can be answered credibly. The tree/UI already support N sizes, so enabling
+  them later is data-only, not a rewrite.
+- **Locked sizes (tunable in config):** SB open = 2.5 bb; BB iso-vs-limp = 3.5 bb;
+  3bet = 3× the prior raise; 4bet = 2.2× the 3bet; then all-in. Raise cap = 4.
+- **Actions:** SB {fold, limp, raise, allin}; BB-vs-limp {check, raise, allin};
+  vs-raise {fold, call, 3bet, allin}; vs-3bet {fold, call, 4bet, allin};
+  vs-4bet/allin {fold, call}.
+- **Stack support:** 10–100 bb; default 50 bb (bet-size lines are meaningful at
+  these depths; very short stacks collapse toward push/fold, which Phase A covers).
+- **Equity realization:** R = 1.0 (raw) for v1, configurable; refine in Phase D.
+
+---
+
 ## File structure
 
 - `engine/preflop/tree.py` — `BettingTree`: public nodes, actions, pot accounting, terminal classification.
