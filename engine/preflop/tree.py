@@ -78,7 +78,7 @@ def _sized_raise_to(level: float, num_raises: int, sizes: Sizes) -> float:
     return level * mult
 
 
-def build_tree(stack_bb: float, sizes: Sizes | None = None) -> Node:
+def build_tree(stack_bb: float, sizes: Sizes | None = None, allow_limp: bool = True) -> Node:
     s = sizes or Sizes()
     S = float(stack_bb)
 
@@ -138,8 +138,9 @@ def build_tree(stack_bb: float, sizes: Sizes | None = None) -> Node:
     root = Node(player=SB, contrib=(0.5, 1.0))
     root.actions.append("fold")
     root.children["fold"] = fold_node([0.5, 1.0], SB)
-    root.actions.append("limp")
-    root.children["limp"] = build([1.0, 1.0], BB, 0)
+    if allow_limp:
+        root.actions.append("limp")
+        root.children["limp"] = build([1.0, 1.0], BB, 0)
     root.actions.append("raise")
     root.children["raise"] = build([s.open_to, 1.0], BB, 1)
     root.actions.append("allin")

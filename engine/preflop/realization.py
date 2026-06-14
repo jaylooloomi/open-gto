@@ -12,6 +12,11 @@ Each function returns ``(net_sb, net_bb)`` with ``net_bb == -net_sb`` (zero-sum)
 """
 from __future__ import annotations
 
+# Shared defaults so the generic and vectorized solvers model terminals
+# identically (keeps the cross-validation valid).
+DEFAULT_REALIZATION = 1.0
+DEFAULT_IP_PREMIUM = 0.0  # tunable; a uniform premium just inflates pot-entry, so off
+
 
 def fold_value(folder: int, contrib: tuple[float, float]) -> tuple[float, float]:
     if folder == 0:  # SB folded -> SB loses its own contribution
@@ -27,8 +32,18 @@ def showdown_value(eq: float, stake: float) -> tuple[float, float]:
 
 
 def seeflop_value(
-    eq: float, contrib: tuple[float, float], realization: float = 1.0
+    eq: float,
+    contrib: tuple[float, float],
+    realization: float = 1.0,
+    ip_premium: float = 0.0,
 ) -> tuple[float, float]:
+    """See-flop EV with an equity-realization scale and an IP positional premium.
+
+    In HU the SB (button) is in position postflop. ``ip_premium`` grants the SB a
+    small zero-sum edge proportional to the pot, so building bigger pots is more
+    attractive to the IP player (curbs degenerate limping; BB defends tighter).
+    Still a heuristic for the missing postflop EV; documented as such.
+    """
     stake = contrib[0]  # equal for both players at a see-flop node
-    net_sb = (2.0 * eq - 1.0) * realization * stake
+    net_sb = (2.0 * eq - 1.0) * realization * stake + ip_premium * stake
     return (net_sb, -net_sb)

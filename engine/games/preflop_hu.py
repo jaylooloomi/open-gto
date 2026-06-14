@@ -10,20 +10,36 @@ from __future__ import annotations
 import numpy as np
 
 from engine.game import ExtensiveFormGame
-from engine.preflop.realization import fold_value, seeflop_value, showdown_value
+from engine.preflop.realization import (
+    DEFAULT_IP_PREMIUM,
+    DEFAULT_REALIZATION,
+    fold_value,
+    seeflop_value,
+    showdown_value,
+)
 from engine.preflop.tree import build_tree
 
 
 class PreflopHU(ExtensiveFormGame):
     num_players = 2
 
-    def __init__(self, probs, equity, stack_bb, sizes=None, realization: float = 1.0):
+    def __init__(
+        self,
+        probs,
+        equity,
+        stack_bb,
+        sizes=None,
+        realization: float = DEFAULT_REALIZATION,
+        ip_premium: float = DEFAULT_IP_PREMIUM,
+        allow_limp: bool = False,
+    ):
         self.p = np.asarray(probs, dtype=float)
         self.p = self.p / self.p.sum()
         self.E = np.asarray(equity, dtype=float)
         self.n = len(self.p)
-        self.root = build_tree(stack_bb, sizes)
+        self.root = build_tree(stack_bb, sizes, allow_limp=allow_limp)
         self.R = realization
+        self.ip_premium = ip_premium
 
     def initial_state(self):
         return (None, -1, -1)  # pre-deal
@@ -66,5 +82,5 @@ class PreflopHU(ExtensiveFormGame):
         elif node.kind == "showdown":
             net = showdown_value(float(self.E[i, j]), node.contrib[0])
         else:  # seeflop
-            net = seeflop_value(float(self.E[i, j]), node.contrib, self.R)
+            net = seeflop_value(float(self.E[i, j]), node.contrib, self.R, self.ip_premium)
         return net[0] if player == 0 else net[1]

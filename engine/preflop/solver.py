@@ -15,6 +15,7 @@ from __future__ import annotations
 import numpy as np
 
 from engine.equity import COMBO_WEIGHTS, HANDS_169, get_equity_matrix
+from engine.preflop.realization import DEFAULT_IP_PREMIUM, DEFAULT_REALIZATION
 from engine.preflop.tree import BB, SB, Node, build_tree
 
 
@@ -25,7 +26,9 @@ class PreflopSolver:
         probs=None,
         equity=None,
         sizes=None,
-        realization: float = 1.0,
+        realization: float = DEFAULT_REALIZATION,
+        ip_premium: float = DEFAULT_IP_PREMIUM,
+        allow_limp: bool = False,
         variant: str = "cfr_plus",
     ):
         self.E = get_equity_matrix() if equity is None else np.asarray(equity, dtype=float)
@@ -34,7 +37,8 @@ class PreflopSolver:
         self.n = len(self.p)
         self.A = 2.0 * self.E - 1.0
         self.R = float(realization)
-        self.root = build_tree(stack_bb, sizes)
+        self.ip_premium = float(ip_premium)
+        self.root = build_tree(stack_bb, sizes, allow_limp=allow_limp)
         self.variant = variant
         self._iter = 0
         self.regret: dict[str, np.ndarray] = {}
@@ -58,9 +62,12 @@ class PreflopSolver:
             const = net_sb if player == SB else -net_sb
             return np.full(self.n, const * reach_opp.sum())
         stake = node.contrib[0]
-        scale = stake * (self.R if node.kind == "seeflop" else 1.0)
-        # v_player[h] = scale * sum over opp hands of A[h, opp] * reach_opp[opp]
-        return scale * (self.A @ reach_opp)
+        if node.kind == "seeflop":
+            value = stake * self.R * (self.A @ reach_opp)
+            sign = 1.0 if player == SB else -1.0  # IP premium goes to the SB (button)
+            return value + sign * self.ip_premium * stake * reach_opp.sum()
+        # showdown
+        return stake * (self.A @ reach_opp)
 
     def _walk(self, node: Node, reach_p: np.ndarray, reach_opp: np.ndarray, player: int) -> np.ndarray:
         if node.is_terminal:
@@ -110,8 +117,12 @@ class PreflopSolver:
                     net_sb = -node.contrib[0] if node.folder == SB else node.contrib[1]
                     total += net_sb * reach_sb.sum() * reach_bb.sum()
                 else:
-                    scale = node.contrib[0] * (self.R if node.kind == "seeflop" else 1.0)
-                    total += scale * (reach_sb @ self.A @ reach_bb)
+                    stake = node.contrib[0]
+                    if node.kind == "seeflop":
+                        total += stake * self.R * (reach_sb @ self.A @ reach_bb)
+                        total += self.ip_premium * stake * reach_sb.sum() * reach_bb.sum()
+                    else:
+                        total += stake * (reach_sb @ self.A @ reach_bb)
                 return
             sigma = self._sigma(node)
             for k, a in enumerate(node.actions):
