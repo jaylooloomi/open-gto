@@ -6,31 +6,37 @@ const FOLD = "#33414f"; // slate — folded
 
 export interface RangeGridProps {
   chart: Chart;
+  selected?: string;
+  onSelect?: (label: string) => void;
 }
 
 /** A 13x13 starting-hand grid; each cell is filled bottom-up by its frequency. */
-export function RangeGrid({ chart }: RangeGridProps) {
+export function RangeGrid({ chart, selected, onSelect }: RangeGridProps) {
   return (
-    <div className="grid" role="grid" aria-label="range grid">
+    <div data-tour="grid" className="grid" role="grid" aria-label="range grid">
       {RANKS.map((_, row) =>
         RANKS.map((__, col) => {
           const label = cellLabel(row, col);
           const freq = chart[label] ?? 0;
           const pct = Math.round(freq * 100);
           const bg = `linear-gradient(to top, ${JAM} ${pct}%, ${FOLD} ${pct}%)`;
+          const isSel = selected === label;
           return (
-            <div
+            <button
               key={label}
-              className="cell"
+              type="button"
+              className={isSel ? "cell sel" : "cell"}
               role="gridcell"
+              aria-pressed={isSel}
               data-label={label}
               data-freq={freq}
               style={{ background: bg }}
               title={`${label}: ${pct}%`}
+              onClick={() => onSelect?.(label)}
             >
               <span className="lbl">{label}</span>
               <span className="pct">{pct}</span>
-            </div>
+            </button>
           );
         }),
       )}

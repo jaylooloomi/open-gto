@@ -73,7 +73,60 @@ button:disabled { opacity: 0.6; cursor: default; }
 .cell .pct { font-size: 0.78em; opacity: 0.85; }
 
 .meta { color: var(--muted); font-size: 0.85rem; margin-top: 14px; }
-.legend { display: flex; gap: 18px; color: var(--muted); font-size: 0.85rem; }
-.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
 .error { color: #ff8080; }
 .hint { color: var(--muted); }
+
+.title-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+button.ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--accent);
+  font-weight: 500;
+  padding: 6px 14px;
+}
+
+/* Hand lookup hero */
+.lookup {
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+}
+.lookup-head { font-size: 0.9rem; color: var(--muted); margin-bottom: 10px; }
+.pickers { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.card-picker { display: flex; align-items: center; gap: 6px; }
+.card-picker select {
+  font-size: 1.2rem; font-weight: 700; padding: 6px 8px; border-radius: 6px;
+  background: #1b2430; color: var(--text); border: 1px solid #3a4a5a;
+}
+.suits { display: flex; gap: 2px; }
+.suit {
+  background: transparent; border: 1px solid transparent; font-size: 1.2rem;
+  padding: 2px 6px; border-radius: 6px; cursor: pointer; line-height: 1;
+}
+.suit.active { border-color: var(--accent); background: #1b2430; }
+.as-class { color: var(--muted); font-size: 1.1rem; font-weight: 700; }
+.warn { color: #ffd27d; margin: 14px 0 0; }
+.verdict { margin-top: 14px; padding: 16px 18px; border-radius: 10px; }
+.verdict-head { font-size: 1.4rem; font-weight: 700; }
+.verdict-detail { margin-top: 6px; font-size: 0.95rem; opacity: 0.95; }
+
+/* Frequency bar */
+.freqbar { margin: 14px 0; }
+.freqbar-track {
+  display: flex; height: 26px; border-radius: 6px; overflow: hidden; background: #33414f;
+}
+.seg.jam { background: #e4564a; }
+.seg.fold { background: #33414f; }
+.freqbar-legend { display: flex; gap: 20px; margin-top: 8px; font-size: 0.85rem; color: var(--text); }
+.freqbar-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+.freqbar-legend small { color: var(--muted); }
+
+/* Clickable cells + selection */
+.cell { border: none; cursor: pointer; padding: 0; font: inherit; }
+.cell.sel { outline: 3px solid #ffd27d; outline-offset: -3px; z-index: 1; }
+
+.glossary { margin-top: 18px; color: var(--muted); font-size: 0.88rem; }
+.glossary summary { cursor: pointer; color: var(--accent); }
+.glossary ul { margin: 10px 0 0; padding-left: 18px; line-height: 1.8; }
+.glossary b { color: var(--text); }
