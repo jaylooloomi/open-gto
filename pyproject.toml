@@ -17,3 +17,4 @@ packages = ["engine", "engine.games", "api"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["slow: longer-running convergence/integration tests"]
