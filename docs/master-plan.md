@@ -82,7 +82,13 @@
 - 引擎:CFR+ 即時求解 HU 推/棄;169 equity 快取。
 - 前端:設定精靈、查手牌建議、頻率條、範圍表、driver.js 導覽、中文。
 
-### Phase B — 6Max/9Max 多位置 preflop + 賽局樹 🔧 下一步
+### Phase B — HU preflop 賽局樹 + 多動作 UI ✅ 已完成
+- 公共下注樹 + 向量化 CFR(交叉驗證);動作:蓋/跛/開池/3bet/4bet/全下。
+- API `/preflop`;前端賽局樹導覽 + 每動作固定配色網格 + 多動作建議。
+- 單一開池尺寸(真・多尺寸待 Phase D postflop);看翻牌用權益實現近似(已標注)。
+- 注意:6Max 多位置(原 Phase B)需多人方法/離線預算,移到 postflop 之後。
+
+### Phase B-next — 6Max/9Max 多位置 preflop + 賽局樹 🔧
 - **引擎(重點工程)**:
   - 擴充賽局樹到多位置 preflop(RFI、面對 open 的 call/3bet/fold 等)。
   - 多人(6/9)→ 樹變大,需評估效能:可能導入**動作抽象**(限定幾個下注尺寸)
