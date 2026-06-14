@@ -12,13 +12,10 @@ from engine.games.push_fold import solve_push_fold
 
 app = FastAPI(title="open-gto", version="0.1.0")
 
-# Allow the Vite dev server to call the API during development.
+# Allow the Vite dev server to call the API during development (any local port).
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ],
+    allow_origin_regex=r"http://(localhost|127\.0\.0\.1):\d+",
     allow_methods=["*"],
     allow_headers=["*"],
 )
