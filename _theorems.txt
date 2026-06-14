@@ -1,0 +1,183 @@
+regret and the Nash equilibrium solution concept.
+Theorem 2 In a zero-sum game at time T , if both player’s average overall regret is less thanϵ, then
+¯σT is a 2ϵ equilibrium.
+An algorithm for selecting σt
+i for player i is regret minimizing if player i’s average overall regret
+(regardless of the sequence σt
+−i) goes to zero as t goes to inﬁnity. As a result, regret minimizing
+algorithms in self-play can be used as a technique for computing an approximate Nash equilibrium.
+Moreover, an algorithm’s bounds on the average overall regret bounds the
+=====
+ual
+regret.
+We can now state our ﬁrst key result.
+Theorem 3 RT
+i ≤ ∑
+I∈Ii
+RT,+
+i,imm(I)
+The proof is in the appendix. Since minimizing immediate counterfactual regret minimizes the
+overall regret, it enables us to ﬁnd an approximate Nash equilibrium if we can only minimize the
+immediate counterfactual regret.
+The key feature of immediate counterfactual regret is that it can be minimized by controlling only
+σi(I). To this end, we can use Blackwell’s algorithm for approachability to minimize this regret
+independently on each information set. In p
+=====
+randomly. This leads us to our second key result.
+Theorem 4 If player i selects actions according to Equation 8 then RT
+i,imm(I) ≤ ∆u,i
+√
+|Ai|/
+√
+T
+and consequently RT
+i ≤ ∆u,i|Ii|
+√
+|Ai|/
+√
+T where |Ai| = max h:P (h)=i |A(h)|.
+The proof is in the appendix. This result establishes that the strategy in Equation 8 can be used
+in self-play to compute a Nash equilibrium. In addition, the bound on the average overall regret is
+linear in the number of information sets. These are similar bounds to what’s achievable by Gordon’s
+Lagrangian Hedging algor
+=====
+ a tie is considered “half a win”
+2The bound from Theorem 4 for the basic procedure can actually be made signiﬁcantly tighter in the speciﬁc
+case of poker. In the appendix, we show that the bound for poker is actually independent of the size of the card
+abstraction.
+5
+For our experiments, we actually use a variation of this basic procedure, which exploits the fact
+that our abstraction has a small number of information sets relative to the number of game states.
+Although each information set is crucial, many consist of a hundred or more individu
+=====
+n, 29, 2006. News item.
+8
+A Appendix
+A.1 Proof of Theorem 3
+Deﬁne D(I) to be the information sets of player i reachable from I (including I). Deﬁne σ|D(I)→σ′ to be a
+strategy proﬁle equal to σ except in the information sets in D(I) where it is equal to σ′. The full counterfactual
+regret is:
+RT
+i,full(I) = 1
+T max
+σ′∈Σi
+TX
+t=1
+πσt
+−i(I)
+`
+ui(σt|D(I)→σ′ , I) − ui(σt, I)
+´
+(9)
+Again, we deﬁne RT ,+
+i,full(I) = max( RT
+i,full(I), 0). Moreover, we deﬁne succσ
+i (I ′|I, a) to be the probability
+that I ′ is the next information set of player i visited
+=====
++
+X
+I′∈Succi(I)
+RT ,+
+i,full(I ′) (15)
+9
+We prove Theorem 3 by using a lemma that can be proven recursively:
+Lemma 7 RT ,+
+i,full(I) ≤P
+I′∈D(I) RT ,+
+i,imm(I ′).
+Proof: We prove this for a particular game recursively on the size of D(I). Observe that if an information
+set has no successors, then Corollary 6 proves the result. We use this as a basis step. Also, observe that
+D(I) = {I} ∪S
+I′∈Succi(I) D(I ′), and that if I ′ ∈ Succi(I), then I /∈ D(I ′), implying |D(I ′)| < |D(I)|.
+Thus, by induction we can establish that:
+RT ,+
+i,full(I) ≤ RT ,+
+
+=====
+′) (17)
+The result immediately follows.
+Proof (of Theorem 3): If P (∅) = i, then RT
+i,full({∅}) = RT
+i , and the theorem follows from Lemma 7. If this
+is not the case, then we can simply add a new information set at the beginning of the game, where player i only
+has one action.
+A.2 Regret Matching
+Blackwell’s approachability theorem when applied to minimizing regret is known as regret matching . In
+general, regret matching can be deﬁned in a domain where there are a ﬁxed set of actions A, a function ut :
+A → R, and on each round a distribution 
+=====
+(a′) ifP
+a′∈A Rt−1,+(a′) > 0
+1
+|A| otherwise
+(19)
+Theorem 8 If |u| = max t∈{1...T } maxa,a′∈A(ut(a) − ut(a′)), the regret of the regret matching algorithm is
+bounded by:
+max
+a∈A
+Rt(a) ≤ |u|
+p
+|A|√
+T
+(20)
+Blackwell’s original result [?] focused on the case where an action (or vector) is chosen at random (instead of
+a distribution over actions) and gave a probabilistic guarantee. The result above focuses on the distributions
+selected, and is more applicable to a scenario where a probability is selected instead of an action.
+For a proof, see [5].
+
+=====
+ of an action.
+For a proof, see [5].
+A.3 Proof of Theorem 4
+Observe that Equation 8 is an implementation of regret matching. Moreover, observe that for all I ∈ I i,
+a ∈ A(I), πσt
+−i(I)(ui(σt|I→a, I) − ui(σt, I)) ≤ ∆u,i. Therefore, Theorem 8 states that the counterfactual
+regret of that node will be less than ∆u,i
+p
+|A(I)|/
+√
+T ≤ ∆u,i|Ai|/
+√
+T . Summing over all I ∈ I i yields the
+result.
+A.4 Poker-Speciﬁc Implementation
+We need to iterate over all of the information sets reachable given the joint bucket sequence, and compute prob-
+abilities and
+=====
+(I)(ui(σt|I→a, I) − ui(σt, I)) ≤ ∆u,i. Therefore, Theorem 8 states that the counterfactual
+regret of that node will be less than ∆u,i
+p
+|A(I)|/
+√
+T ≤ ∆u,i|Ai|/
+√
+T . Summing over all I ∈ I i yields the
+result.
+A.4 Poker-Speciﬁc Implementation
+We need to iterate over all of the information sets reachable given the joint bucket sequence, and compute prob-
+abilities and regrets. In order to do this swiftly, we represent the data in each information set in a “player view
+tree”: in other words, we never explicitly represent every state in the abstra
+=====
+ounded by:
+RT
+1 (I) ≤ ∆u,1(I)
+p
+|A(I)|√
+T
+(21)
+By Theorem 3, this means the average overall regret is bounded by:
+RT
+1 ≤
+X
+I∈I1
+∆u,1(I)
+p
+|A(I)|√
+T
+(22)
+First of all, deﬁne ∆u,1 to be the overall range of utilities in limit poker (48 small bets/hand). In particular,
+given π0(I) (the probability of chance acting to reach a node), ∆u,1(I) ≤ π0(I)∆u,1. In limit one could be
+more precise, because any information set that begins with both players checking on the pre-ﬂop has a tighter
+limit on the maximum won or lost, but bounding based on chance nod
+=====

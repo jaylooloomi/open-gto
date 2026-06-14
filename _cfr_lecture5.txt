@@ -1,0 +1,913 @@
+=== PAGE 1 ===
+Counterfactual Regret 
+Minimization
+
+=== PAGE 2 ===
+Extensive-Form Games Recap
+-
+History h is ground truth state of the game
+-
+All cards for all players
+-
+Information set s is observation for one 
+player
+-
+Set of histories consistent with observation
+-
+The hand for one player
+-
+Strategy (policy) πi(a|s) gives distribution 
+over actions at information set s
+-
+Terminal history z is history at end of game
+-
+Utility ui(z) is utility for player i
+-
+Reach probability ηπ(h) is joint probability of 
+reaching history h under π
+a1
+a2
+s1
+h1
+h2
+h0
+a3
+a4
+a3
+u(z1)
+u(z2) u(z3)
+u(z4)
+a4
+
+=== PAGE 3 ===
+Sequence Form Recap
+●Store probabilities for 
+sequence of actions
+●Set of strategies is convex
+●Expected utility of game is 
+bilinear
+
+=== PAGE 4 ===
+Sequence Form Recap
+A realization plan x of player 1 fulfills
+If x satisfies these constraints, it is in the sequence-form polytope X
+Goal is to solve this bilinear saddle point problem, where X and Y
+are the sequence-form polytopes
+
+=== PAGE 5 ===
+Sequence-Form Strategies
+🌟Consequence: a lot of results carry over 
+from normal form games when using 
+sequence-form strategies!
+✔Nash equilibrium is a bilinear saddle point problem
+min
+𝑥∈𝑋max
+𝑦∈𝑌𝑥⊤𝐴𝑦
+✔As long as we can construct regret minimizers for the sets of
+sequence-form strategies, we can use them to converge to
+Nash equilibrium in self play
+where 
+𝑥⊤𝐴𝑦= ෍
+𝑧∈𝑍
+𝑢1 𝑧𝑝𝑐ℎ𝑎𝑛𝑐𝑒𝑧𝑥𝜎1 𝑧
+𝑦𝜎2 𝑧
+
+=== PAGE 6 ===
+Recall: Regret Minimization on Δ𝑛
+for 𝑡= 1, … , 𝑇:
+•
+Agent chooses an action distribution 𝑥𝑡
+•
+Environment chooses a utility vector 𝑢𝑡∈0, 1 𝑛
+•
+Agent observes 𝑢𝑡and gets utility 𝑢𝑡, 𝑥𝑡
+Agent goal: Minimize regret. 
+“How well do we do against best, fixed strategy in hindsight?”
+𝑅𝑇≔max
+ෝ𝒙∈𝑋
+෍
+𝑡=1
+𝑇
+〈𝑢𝑡, ො𝑥〉
+−෍
+𝑡=1
+𝑇
+〈𝑢𝑡, 𝑥𝑡〉
+Utility that was actually accumulated
+Maximum utility that was
+achievable by the best fixed
+action in hindsight
+
+=== PAGE 7 ===
+Regret Minimization on Δ𝑛
+Sequence-Form Decision Problems
+for 𝑡= 1, … , 𝑇:
+•
+Agent chooses a sequence-form strategy 𝑥𝑡
+•
+Environment chooses a utility vector 𝑢𝑡∈0, 1 𝑛
+•
+Agent observes 𝑢𝑡and gets utility 𝑢𝑡, 𝑥𝑡
+Agent goal: Minimize regret. 
+“How well do we do against best, fixed strategy in hindsight?”
+𝑅𝑇≔max
+ෝ𝒙∈𝑋
+෍
+𝑡=1
+𝑇
+〈𝑢𝑡, ො𝑥〉
+−෍
+𝑡=1
+𝑇
+〈𝑢𝑡, 𝑥𝑡〉
+Utility that was actually accumulated
+Maximum utility that was
+achievable by the best fixed
+action in hindsight
+If we can do regret minimization for sequence-form strategy spaces, 
+then we can solve zero-sum extensive-form games!
+
+=== PAGE 8 ===
+Regret Circuits
+• Player 1 chooses A or 
+B to decide which 
+normal-form game to 
+play
+• Then the players play 
+the normal-form 
+game
+a
+b
+s1
+h3
+h4
+h1
+C
+D
+C
+u(z1)
+u(z2) u(z3)
+u(z4)
+D
+A
+B
+h0
+c
+d
+s2
+h5
+h6
+E
+F
+E
+u(z5)
+u(z6) u(z7)
+u(z8)
+F
+h2
+s0
+
+=== PAGE 9 ===
+Regret Circuits
+• No-regret approach:
+– Each iteration choose a 
+behavior strategy
+– Opponent also chooses 
+behavior strategy
+– Want average regret to 
+go to zero
+a
+b
+s1
+h3
+h4
+h1
+C
+D
+C
+u(z1)
+u(z2) u(z3)
+u(z4)
+D
+A
+B
+h0
+c
+d
+s2
+h5
+h6
+E
+F
+E
+u(z5)
+u(z6) u(z7)
+u(z8)
+F
+h2
+s0
+
+=== PAGE 10 ===
+Regret Circuits
+• Let's decompose 
+this game into the 
+two subgames
+• Opponent chooses 
+strategy for each 
+subgame
+– a or b / c or d
+• We choose strategy 
+for each subgame
+– C or D / E or F
+a
+b
+s1
+h3
+h4
+h1
+C
+D
+C
+u(z1)
+u(z2) u(z3)
+u(z4)
+D
+c
+d
+s2
+h5
+h6
+E
+F
+E
+u(z5)
+u(z6) u(z7)
+u(z8)
+F
+h2
+A
+B
+
+=== PAGE 11 ===
+Regret Circuits
+• We know how to solve 
+this
+• Just use a no-regret 
+algorithm!
+– Let's use RM
+• Denote regret in each 
+subgame
+a
+b
+s1
+h3
+h4
+h1
+C
+D
+C
+u(z1)
+u(z2) u(z3)
+u(z4)
+D
+c
+d
+s2
+h5
+h6
+E
+F
+E
+u(z5)
+u(z6) u(z7)
+u(z8)
+F
+h2
+A
+B
+
+=== PAGE 12 ===
+Regret Circuits
+• Now let's add back 
+root decision node
+• Same setting: both 
+players choose 
+behavior strategy 
+every timestep
+• We know how to 
+update s1 and s2
+– How to update s0?
+a
+b
+s1
+h3
+h4
+h1
+C
+D
+C
+u(z1)
+u(z2) u(z3)
+u(z4)
+D
+A
+B
+h0
+c
+d
+s2
+h5
+h6
+E
+F
+E
+u(z5)
+u(z6) u(z7)
+u(z8)
+F
+h2
+s0
+
+=== PAGE 13 ===
+Regret Circuits
+• Main idea: we pass 
+values of subgames 
+back up as if they 
+were utilities
+• Then run no-regret 
+on this new problem
+A
+B
+h0
+s0
+
+=== PAGE 14 ===
+Regret Circuits
+• Can bound total regret by regret 
+accumulated in subgames plus root regret
+• Intuition: we pay for learning top-level 
+decision plus subgame decision
+• Still get same order regret
+
+=== PAGE 15 ===
+Counterfactual Regret Minimization 
+(CFR)
+• Can extend this approach for arbitrary 
+treeplexes
+• Simply run RM on each individual 
+information set
+• Use "counterfactual values"
+
+=== PAGE 16 ===
+Counterfactual Regret Minimization 
+(CFR)
+• Back to our example
+• π1(C | s1) = 1
+• π2(a | h1) = 1
+a
+b
+s1
+h3
+h4
+h1
+C
+D
+C
+u(z1)
+u(z2) u(z3)
+u(z4)
+D
+A
+B
+h0
+c
+d
+s2
+h5
+h6
+E
+F
+E
+u(z5)
+u(z6) u(z7)
+u(z8)
+F
+h2
+s0
+Regret circuit notation
+
+=== PAGE 17 ===
+Counterfactual Regret Minimization 
+(CFR)
+• Run Regret Matching at every decision point
+• Feed counterfactual values to regret 
+minimizer
+
+=== PAGE 18 ===
+Another CFR Example on Kuhn 
+Poker
+C
+1
+2
+2
+1
+-1
+-2
+-1
++1
+-2
+1
+2
+2
+1
+-1
+-2
+-1
++1
+-2
+1
+2
+2
+1
+-1
++2
++1
++1
++2
+1
+2
+2
+1
+-1
+-2
+-1
++1
+-2
+1
+2
+2
+1
+-1
++2
++1
++1
++2
+1
+2
+2
+1
+-1
++2
++1
++1
++2
+⚠️Information sets for red player (Player 2) are not shown
+
+=== PAGE 19 ===
+Two Representations
+Tree-Form (Sequential) Decision Problem
+aka. sequence-form decision problem
+aka. treeplex
+(for P1)
+Represents the game from viewpoint of one player
+This is the representation in regret minimization
+Game tree
+Each node belongs to a specific 
+player or chance
+C
+2
++2
+1
+2
+2
+1
+-1
+-2
+-1
++1
+-2
+1
+2
+2
+1
+-1
++2
++1
++1
++2
+1
+2
+2
+1
+-1
++2
++1
++1
++2
+Decision points
+Observation points
+bet
+Queen
+bet
+bet
+
+=== PAGE 20 ===
+Step 1: Compute and output the sequence-form 
+strategy 𝑥𝑡
+Counterfactual Regret Minimization
+Suppose the orange local strategies were output at time 
+𝑡by the regret minimizers at each decision point.
+.
+bet
+Queen
+bet
+bet
+0.9
+0.9
+0.2
+0.02
+0.5
+0.5
+0.4
+0.2
+0.6
+0.3
+0.1
+0.075
+0.9
+0.675
+0.25
+0.25
+0.8
+0.08
+1.0
+0.1
+0.1
+0.5
+0.5
+0.75
+0.75
+
+=== PAGE 21 ===
+Counterfactual Regret Minimization
+bet
+Queen
+bet
+bet
+0.9
+-1.5
+0.2
+-0.6
+0.5
+-0.4
+0.4
+-0.5
+0.6
+1.1
+0.1
+-2.5
+0.9
+1.6
+0.25
+0.0
+0.8
+1.2
+Remember: in regret minimization we make no 
+assumption as to how the environment picked the 
+utility vector. So, the green utilities may not actually 
+be “real” payoffs in the game, which are
+𝑢𝑡𝑠=
+෍
+𝑧∈𝑍:
+𝜎1 𝑧=𝑠
+𝑢𝑧pchance(𝑧) 𝑦𝑡𝜎2 𝑧
+(Not too important; this is just the vector such that 
+𝑢𝑡, 𝑥𝑡matches the expected value calculation 
+from a few slides ago)
+0.0
+0.1
+2.0
+0.5
+0.0
+0.75
+1.0
+Suppose the orange local strategies were output at time 
+𝑡by the regret minimizers at each decision point.
+Now we observe some utility vector 𝑢𝑡
+
+=== PAGE 22 ===
+Counterfactual Regret Minimization
+Suppose the orange local strategies were output at time 
+𝑡by the regret minimizers at each decision point.
+Now we observe some utility vector 𝑢𝑡
+Step 2: Compute counterfactual utilities
+At observation points and leaves:
+counterfactual utility =
+sum of counterfactual utilities of children +
+utility value given at that observation point
+At decision points:
+counterfactual utility =
+expected counterfactual utility of children 
+under local strategy at that decision point
+bet
+Queen
+bet
+bet
+0.9
+-1.5
+0.2
+-0.6
+0.5
+-0.4
+0.4
+-0.5
+0.6
+1.1
+0.1
+-2.5
+0.9
+1.6
+0.25
+0.0
+0.8
+1.2
+0.0
+0.1
+2.0
+0.5
+0.0
+0.75
+1.0
+
+=== PAGE 23 ===
+Counterfactual Regret Minimization
+Suppose the orange local strategies were output at time 
+𝑡by the regret minimizers at each decision point.
+Now we observe some utility vector 𝑢𝑡
+Step 2: Compute counterfactual utilities
+At observation points and leaves:
+counterfactual utility =
+sum of counterfactual utilities of children +
+utility value given at that observation point
+At decision points:
+counterfactual utility =
+expected counterfactual utility of children 
+under local strategy at that decision point
+bet
+Queen
+bet
+bet
+0.1
+2.0
+2.84
+0.9
+-1.5
+-1.5
+0.2
+-0.6
+-0.6
+0.5
+0.0
+0.46
+0.5
+-0.4
+-0.4
+0.4
+-0.5
+-0.5
+0.6
+1.1
+1.1
+0.75
+1.0
+2.19
+0.1
+-2.5
+-2.5
+0.9
+1.6
+1.6
+0.8
+1.2
+1.2
+0.0
+0.6065
+1.19
+0.46
+0.84
+-1.066
+0.03
+1.6425
+0.25
+0.0
+0.0
+
+=== PAGE 24 ===
+Counterfactual Regret Minimization
+Suppose the orange local strategies were output at time 
+𝑡by the regret minimizers at each decision point.
+Now we observe some utility vector 𝑢𝑡
+bet
+Queen
+bet
+bet
+0.1
+2.0
+2.84
+0.9
+-1.5
+-1.5
+0.2
+-0.6
+-0.6
+0.5
+0.0
+0.46
+0.5
+-0.4
+-0.4
+0.4
+-0.5
+-0.5
+0.6
+1.1
+1.1
+0.75
+1.0
+2.19
+0.1
+-2.5
+-2.5
+0.9
+1.6
+1.6
+0.8
+1.2
+1.2
+0.0
+0.6065
+1.19
+0.46
+0.84
+-1.066
+0.03
+1.6425
+0.25
+0.0
+0.0
+Step 2: Feed the counterfactual utilities 
+to the regret minimizers at each 
+decision point
+Note: Steps 1 & 2 can be done in a 
+single bottom-up pass
+Remember: this will work no matter the 
+choice of regret minimizers (MWU, RM, 
+RM+, Discounted RM, Optimistic RM+, 
+etc). We can also use different regret 
+minimizers at different nodes, unlike 
+the original CFR paper, which used RM
+
+=== PAGE 25 ===
+Counterfactual Regret Minimization
+Suppose the orange local strategies were output at time 
+𝑡by the regret minimizers at each decision point.
+Now we observe some utility vector 𝑢𝑡
+bet
+Queen
+bet
+bet
+0.1
+2.0
+2.84
+0.9
+-1.5
+-1.5
+0.2
+-0.6
+-0.6
+0.5
+0.0
+0.46
+0.5
+-0.4
+-0.4
+0.4
+-0.5
+-0.5
+0.6
+1.1
+1.1
+0.75
+1.0
+2.19
+0.1
+-2.5
+-2.5
+0.9
+1.6
+1.6
+0.8
+1.2
+1.2
+0.0
+0.6065
+1.19
+0.46
+0.84
+-1.066
+0.03
+1.6425
+0.25
+0.0
+0.0
+Step 2: Feed the counterfactual utilities 
+to the regret minimizers at each 
+decision point
+Example:
+Feed utilities (2.19, 0) to the regret 
+minimizer for this decision point
+
+=== PAGE 26 ===
+CFR Guarantees
+•
+Theorem: the regret cumulated by CFR can be bounded as
+•
+Therefore:  if the local regret minimizers all have regret 𝑂
+𝑇, 
+then CFR has regret 𝑂
+𝑇(where the 𝑂hides game-
+dependent constants)
+𝑅𝐶𝐹𝑅≤෍
+𝑗∈𝐽
+max{0, 𝑅𝑗}
+Decision points
+Regret of local regret
+minimizer for decision point 𝑗
+[Farina, Kroer & Sandholm, Regret Circuits: Composability of Regret Minimizers, ICML 2019]
+Therefore: if both players in a zero-sum extensive-form 
+game play according to CFR, the average strategy 
+converges to Nash equilibrium at rate 𝑂( Τ
+1
+𝑇)
+
+=== PAGE 27 ===
+Why is CFR Superior in Practice?
+🌟… to second-order methods (which can offer 
+convergence rate 1/eT )?
+– Does not require solving large linear systems
+– Second-order methods (interior point, …) don’t fit in 
+memory for large games
+🌟… to general-purpose regret minimizers (FTRL & OMD)?
+– CFR uses an approach local to each decision point 
+(easier to parallelize, warm-start, etc.)
+•
+[Brown & Sandholm, Reduced Space and Faster Convergence in Imperfect-Information 
+Games via Pruning. ICML-17]
+•
+[Brown & Sandholm, Strategy-based warm starting for regret minimization in games, 
+AAAI 2016]
+– No need for expensive projections onto feasible 
+strategy polytope (think projected gradient descent)
+
+=== PAGE 28 ===
+Other approaches
+• Offline first-order methods:
+– E.g., mirror prox (MP) or excessive gap technique 
+(EGT)
+• O(1/T) convergence instead of CFR’s O(1 / 𝑇)
+– Regret minimization is decentralized, and with 
+optimism it matches the same theoretical rates. 
+Also, it performs better empirically
+• All in all, regret-based methods are today the 
+scalable state of the art
+
+=== PAGE 29 ===
+CFR Framework + Predictivity
+
+=== PAGE 30 ===
+Important Takeaways
+🌟You can construct a regret minimizer for
+sequential decision making problems by
+combining regret minimizers for individual
+decision points
+⇒Improvements on simplex domains carry over to   
+extensive-form domains!
+🌟Predictivity works well also in extensive-form
+domains
+
+=== PAGE 31 ===
+Techniques to Further Increase 
+Scalability of CFR
+• Using utility estimators
+– Similar idea as stochastic gradient descent vs gradient 
+descent
+– Instead of exactly computing the green numbers 
+(gradients of the utility function), we use cheap unbiased 
+estimators
+– Popular estimator: sample a trajectory in the game tree 
+and use importance sampling
+– “Monte Carlo CFR” [Monte Carlo Sampling for Regret 
+Minimization in Extensive Games; Lanctot, Waugh, 
+Zinkevich, Bowling NIPS 2009]
+– Even better algorithm, ESCHER, does not use importance 
+sampling [McAleer, Farina, Lanctot & Sandholm ICLR-23]
