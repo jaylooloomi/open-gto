@@ -13,16 +13,27 @@ import sys
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="engine.cli", description="open-gto solver")
-    parser.add_argument("game", choices=["push_fold", "kuhn", "leduc"])
-    parser.add_argument("--stack", type=float, default=10.0, help="effective stack in bb (push_fold)")
+    parser.add_argument("game", choices=["push_fold", "preflop", "river", "kuhn", "leduc"])
+    parser.add_argument("--stack", type=float, default=10.0, help="effective stack in bb")
     parser.add_argument("--iters", type=int, default=1500)
     parser.add_argument("--variant", default="cfr_plus", choices=["cfr", "cfr_plus", "dcfr"])
+    parser.add_argument("--board", default="As,Kd,7h,2c,9s", help="river board (river)")
+    parser.add_argument("--pot", type=float, default=10.0, help="starting pot in bb (river)")
     args = parser.parse_args(argv)
 
     if args.game == "push_fold":
         from engine.games.push_fold import solve_push_fold
 
         result = solve_push_fold(args.stack, iterations=args.iters, variant=args.variant)
+    elif args.game == "preflop":
+        from engine.preflop.solver import solve_preflop_hu
+
+        result = solve_preflop_hu(args.stack, iterations=args.iters)
+    elif args.game == "river":
+        from engine.postflop.river import parse_card, solve_river
+
+        board = [parse_card(c.strip()) for c in args.board.split(",")]
+        result = solve_river(board, pot=args.pot, stack=args.stack, iterations=args.iters)
     else:
         from engine.cfr import CFRSolver
         from engine.exploitability import exploitability
