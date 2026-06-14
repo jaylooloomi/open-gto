@@ -46,6 +46,7 @@ class Node:
     is_terminal: bool = False
     kind: str | None = None  # "fold" | "showdown" | "seeflop"
     folder: int | None = None
+    path: str = ""  # action path from root (stable id, e.g. "raise/3bet")
 
     def child(self, action: str) -> "Node":
         return self.children[action]
@@ -143,4 +144,11 @@ def build_tree(stack_bb: float, sizes: Sizes | None = None) -> Node:
     root.children["raise"] = build([s.open_to, 1.0], BB, 1)
     root.actions.append("allin")
     root.children["allin"] = build([S, 1.0], BB, 1)
+    _assign_paths(root, "")
     return root
+
+
+def _assign_paths(node: Node, path: str) -> None:
+    node.path = path
+    for action, child in node.children.items():
+        _assign_paths(child, f"{path}/{action}" if path else action)
