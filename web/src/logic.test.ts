@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { classFromCards } from "./hands";
 import { aggregate, comboWeight, TOTAL_COMBOS } from "./combos";
 import { verdict } from "./verdict";
+import { effectiveBb, viewForPosition } from "./scenario";
 
 describe("classFromCards", () => {
   it("maps a pocket pair", () => {
@@ -71,5 +72,21 @@ describe("verdict", () => {
   });
   it("uses call wording for the BB view", () => {
     expect(verdict("bb_call", 1).headline).toContain("Call");
+  });
+});
+
+describe("scenario", () => {
+  it("converts chips to effective bb", () => {
+    expect(effectiveBb(10, 1)).toBe(10);
+    expect(effectiveBb(100, 2)).toBe(50);
+    expect(effectiveBb(25, 0.5)).toBe(50);
+  });
+  it("guards against zero/negative inputs", () => {
+    expect(effectiveBb(10, 0)).toBe(0);
+    expect(effectiveBb(0, 1)).toBe(0);
+  });
+  it("maps position to the right chart", () => {
+    expect(viewForPosition("SB")).toBe("sb_jam");
+    expect(viewForPosition("BB")).toBe("bb_call");
   });
 });

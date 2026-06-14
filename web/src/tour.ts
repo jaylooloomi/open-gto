@@ -1,8 +1,8 @@
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 
-// Guided onboarding tour (Traditional Chinese) for first-time / unsure users.
-// Steps target [data-tour] attributes that exist once a solve has loaded.
+// Guided onboarding tour (Traditional Chinese), following the setup flow:
+// blinds+stack -> players -> position -> hand -> recommendation.
 
 export function startTour(): void {
   const tour = driver({
@@ -17,55 +17,61 @@ export function startTour(): void {
         popover: {
           title: "歡迎使用 open-gto",
           description:
-            "這個工具會用 AI(博弈論最優解)告訴你:在單挑德州撲克裡,每手牌「最該怎麼打」。完全不會打也沒關係,跟著走就行。",
+            "跟著左邊的步驟設定你的牌局,最後右邊就會告訴你這手牌的 GTO 最佳打法。完全不會打也沒關係。",
+        },
+      },
+      {
+        element: "[data-tour='blinds']",
+        popover: {
+          title: "① 盲注面額",
+          description:
+            "填你這桌的小盲 / 大盲是多少錢。這只用來把籌碼換算成「大盲(bb)」,不會影響策略本身。",
         },
       },
       {
         element: "[data-tour='stack']",
         popover: {
-          title: "① 先設定籌碼深度",
+          title: "② 你的有效籌碼",
           description:
-            "拖動滑桿選你和對手的籌碼有多少個「大盲(bb)」。籌碼越淺,越多牌值得全下。",
+            "填你手上還有多少錢,系統會換算成幾個大盲(bb)。這才是 GTO 真正在意的數字。",
         },
       },
       {
-        element: "[data-tour='solve']",
+        element: "[data-tour='players']",
         popover: {
-          title: "② 算出最佳策略",
-          description:
-            "按這顆按鈕,AI 會即時算出 GTO 最佳打法。(一進來就先幫你算好 10bb 的範例了)",
+          title: "③ 牌桌人數",
+          description: "目前支援單挑(2 人);6Max / 9Max 多人桌正在開發中。",
         },
       },
       {
-        element: "[data-tour='lookup']",
+        element: "[data-tour='position']",
         popover: {
-          title: "③ 查你手上的牌(新手看這裡)",
+          title: "④ 你的位置",
           description:
-            "選你拿到的兩張牌,下方會直接用白話告訴你:該「全下」還是「蓋牌」。這就是最快上手的方式。",
+            "選你坐在小盲還是大盲。位置不同,該怎麼打差很多 —— 這也決定了你面對的情境。",
         },
       },
       {
-        element: "[data-tour='freq']",
+        element: "[data-tour='hand']",
         popover: {
-          title: "整體進攻比例",
-          description:
-            "這條顯示:在所有起手牌裡,GTO 會推注 / 蓋牌的比例各佔多少。",
+          title: "⑤ 你的手牌",
+          description: "選你拿到的兩張牌(點數 + 花色)。",
         },
       },
       {
-        element: "[data-tour='view']",
+        element: "[data-tour='verdict']",
         popover: {
-          title: "切換角色視角",
+          title: "GTO 建議出爐",
           description:
-            "看「小盲該推哪些牌」,或「大盲面對全下時該跟注哪些牌」。",
+            "這裡用白話告訴你:這手牌該「全下」還是「蓋牌」,以及換算成實際金額。",
         },
       },
       {
         element: "[data-tour='grid']",
         popover: {
-          title: "169 種起手牌一覽",
+          title: "完整範圍表",
           description:
-            "這張表是所有起手牌組合。紅色=該進攻、藍色=該蓋牌,格子裡的數字是進攻機率。點任一格,上面就會顯示那手牌的建議。",
+            "想看全貌就看這張 169 起手牌表:紅=該進攻、藍=該蓋牌。點任一格,上面的建議會跟著更新。",
         },
       },
     ],
