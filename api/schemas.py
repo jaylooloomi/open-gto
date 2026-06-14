@@ -22,3 +22,8 @@ class SolveResponse(BaseModel):
     sb_jam: dict[str, float]
     bb_call: dict[str, float]
     exploitability: float
+
+
+class PreflopRequest(BaseModel):
+    stack_bb: float = Field(50.0, gt=0, le=200, description="Effective stack in big blinds")
+    iterations: int = Field(1000, ge=1, le=50_000)

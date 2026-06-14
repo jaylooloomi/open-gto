@@ -7,8 +7,9 @@ from __future__ import annotations
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.schemas import SolveRequest, SolveResponse
+from api.schemas import PreflopRequest, SolveRequest, SolveResponse
 from engine.games.push_fold import solve_push_fold
+from engine.preflop.solver import solve_preflop_hu
 
 app = FastAPI(title="open-gto", version="0.1.0")
 
@@ -31,3 +32,9 @@ def solve(req: SolveRequest) -> dict:
     return solve_push_fold(
         req.params.stack_bb, iterations=req.iterations, variant=req.variant
     )
+
+
+@app.post("/preflop")
+def preflop(req: PreflopRequest) -> dict:
+    """Full HU preflop solve: betting tree + per-node strategy charts."""
+    return solve_preflop_hu(req.stack_bb, iterations=req.iterations)
