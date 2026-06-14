@@ -63,7 +63,15 @@ export function startTour(): void {
         popover: {
           title: "GTO 建議出爐",
           description:
-            "這裡用白話告訴你:這手牌該「全下」還是「蓋牌」,以及換算成實際金額。",
+            "這裡用白話告訴你這手牌最高頻的打法(加注 / 跛入 / 蓋牌 / 全下),以及機率。",
+        },
+      },
+      {
+        element: "[data-tour='tree']",
+        popover: {
+          title: "走賽局樹",
+          description:
+            "想看更深?點這裡的動作,就能看「我加注後,對手會怎麼回應」一路往下(3bet、4bet…)。",
         },
       },
       {
@@ -71,7 +79,7 @@ export function startTour(): void {
         popover: {
           title: "完整範圍表",
           description:
-            "想看全貌就看這張 169 起手牌表:紅=該進攻、藍=該蓋牌。點任一格,上面的建議會跟著更新。",
+            "169 起手牌一覽,每個動作有自己的顏色(加注=琥珀、全下=紅、蓋牌=深藍…)。點任一格,上面建議會更新。",
         },
       },
     ],

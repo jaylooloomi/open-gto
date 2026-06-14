@@ -172,3 +172,18 @@ button.ghost {
 .result-meta { list-style: none; padding: 0; margin: 12px 0 0; font-size: 0.85rem; color: var(--muted); line-height: 1.9; }
 .result-meta b { color: var(--text); }
 .range-head { margin: 16px 0 6px; font-size: 0.82rem; color: var(--muted); }
+.result-meta .note { color: #8aa0b4; font-size: 0.78rem; margin-top: 4px; }
+
+/* Action-tree navigation */
+.postree { background: var(--panel); border-radius: 10px; padding: 12px 14px; margin: 14px 0; }
+.breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.crumb { background: transparent; border: 0; color: var(--accent); padding: 2px 4px; font: inherit; cursor: pointer; }
+.sep { color: var(--muted); }
+.turn { margin-top: 8px; font-size: 0.85rem; color: var(--muted); }
+.turn b { color: var(--text); }
+.next-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.navact {
+  background: #1b2430; color: var(--text); border: 1px solid #3a4a5a;
+  border-radius: 6px; padding: 5px 11px; font: inherit; cursor: pointer;
+}
+.navact:hover { border-color: var(--accent); }
