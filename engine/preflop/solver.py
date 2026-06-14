@@ -141,3 +141,42 @@ class PreflopSolver:
             labels[h]: {a: float(strat[h, k]) for k, a in enumerate(node.actions)}
             for h in range(self.n)
         }
+
+
+def _serialize(node: Node) -> dict:
+    return {
+        "path": node.path,
+        "player": node.player,
+        "is_terminal": node.is_terminal,
+        "kind": node.kind,
+        "actions": list(node.actions),
+        "contrib": list(node.contrib),
+        "children": {a: c.path for a, c in node.children.items()},
+    }
+
+
+def solve_preflop_hu(stack_bb: float, iterations: int = 1000, variant: str = "cfr_plus") -> dict:
+    """Solve full 169-class HU preflop; return the tree + per-node charts.
+
+    Returns ``{stack_bb, sb_ev, root, nodes}`` where ``nodes`` maps each node's
+    path to its serialized form (decision nodes also carry a ``chart``).
+    """
+    solver = PreflopSolver(stack_bb, variant=variant)
+    solver.run(iterations)
+    nodes: dict[str, dict] = {}
+
+    def walk(node: Node) -> None:
+        info = _serialize(node)
+        if not node.is_terminal:
+            info["chart"] = solver.node_chart(node)
+        nodes[node.path] = info
+        for child in node.children.values():
+            walk(child)
+
+    walk(solver.root)
+    return {
+        "stack_bb": stack_bb,
+        "sb_ev": solver.sb_ev(),
+        "root": solver.root.path,
+        "nodes": nodes,
+    }
